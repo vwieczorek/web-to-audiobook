@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  web_to_audiobook:
+    build: .
+    ports:
+      - "8142:8142"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - APP_LOG_LEVEL=INFO
+      - APP_PORT=8142
+      - APP_HOST=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8142/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
