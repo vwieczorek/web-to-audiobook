@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, HttpUrl
 
@@ -29,7 +29,10 @@ class ExtractedContent(BaseModel):
     metadata: ContentMetadata = Field(..., description="Metadata of the content")
     sections: List[ContentSection] = Field(default_factory=list, description="Structured content sections")
     plain_text: str = Field(..., description="Full extracted content as plain text")
-    extraction_time: datetime = Field(default_factory=datetime.utcnow, description="Time when content was extracted")
+    extraction_time: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), 
+        description="Time when content was extracted"
+    )
     
     @property
     def full_content(self) -> str:
@@ -54,7 +57,10 @@ class ExtractionError(BaseModel):
     url: HttpUrl = Field(..., description="URL that failed to extract")
     error_type: str = Field(..., description="Type of error encountered")
     error_message: str = Field(..., description="Error message")
-    timestamp: datetime = Field(default_factory=datetime.utcnow, description="Time of error")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc), 
+        description="Time of error"
+    )
     status_code: Optional[int] = Field(None, description="HTTP status code if applicable")
     retry_count: int = Field(0, description="Number of retry attempts made")
 
