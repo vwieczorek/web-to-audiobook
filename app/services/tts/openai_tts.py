@@ -1,8 +1,14 @@
 import os
 import logging
 import asyncio
-import aiohttp
 from typing import Optional, Union, Dict, Any
+
+# Try to import aiohttp, but don't fail if it's not installed
+try:
+    import aiohttp
+    AIOHTTP_AVAILABLE = True
+except ImportError:
+    AIOHTTP_AVAILABLE = False
 
 from app.models.tts import (
     TTSRequest, TTSResponse, TTSError, TTSChunk, 
@@ -120,6 +126,12 @@ class OpenAITTSService(TTSService):
             Processed chunk with audio data
         """
         try:
+            # Check if aiohttp is available
+            if not AIOHTTP_AVAILABLE:
+                chunk.error = "aiohttp library is required for OpenAI TTS service"
+                self.logger.error(f"Chunk {chunk.id} failed: aiohttp library not installed")
+                return chunk
+                
             # Skip empty chunks
             if not chunk.text.strip():
                 chunk.processed = True
