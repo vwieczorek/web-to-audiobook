@@ -91,7 +91,7 @@ Once the application is running, you can access the Swagger UI at `http://localh
 ### Main Endpoints
 
 - **GET /health**: Check the health status of the service
-- **POST /extract/url**: Extract content from a URL
+- **POST /content/extract**: Extract content from a URL
 - **POST /tts/convert**: Convert text to speech using the configured TTS provider
 
 The API supports different TTS providers and configurations that can be specified in the request body. See the Swagger documentation for detailed request and response formats.
@@ -169,6 +169,16 @@ APP_LOG_FILE=logs/app.log
 APP_JINA_API_KEY=your_jina_api_key
 APP_OPENAI_API_KEY=your_openai_api_key
 ```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
