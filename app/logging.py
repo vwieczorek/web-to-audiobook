@@ -49,6 +49,6 @@ def setup_logging(log_file, log_level):
     root_logger.addHandler(file_handler)
     
     # Log the start of the application
-    root_logger.info(f"Logging initialized at level {log_level}")
+    root_logger.debug(f"Logging initialized at level {log_level}")
     
     return root_logger
