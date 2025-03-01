@@ -157,28 +157,106 @@ Or:
 pytest --cov=app
 ```
 
-### Environment Variables
+### Configuration
+
+#### Environment Variables
 
 The application uses environment variables for configuration. Copy the `.env.example` file to `.env` and update the values:
 
 ```
-APP_PORT=8142
-APP_HOST=0.0.0.0
-APP_LOG_LEVEL=INFO
-APP_LOG_FILE=logs/app.log
-APP_JINA_API_KEY=your_jina_api_key
-APP_OPENAI_API_KEY=your_openai_api_key
+# Server settings
+APP_PORT=8142                      # Port the application will listen on
+APP_HOST=0.0.0.0                   # Host the application will bind to
+
+# Logging settings
+APP_LOG_LEVEL=INFO                 # Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+APP_LOG_FILE=logs/app.log          # Path to log file
+APP_LOG_ROTATION_MAX_BYTES=10485760  # 10MB - Maximum size before log rotation
+APP_LOG_ROTATION_BACKUP_COUNT=5    # Number of backup log files to keep
+
+# External services API keys
+APP_JINA_API_KEY=your_jina_api_key # API key for Jina.ai content extraction
+APP_OPENAI_API_KEY=your_openai_api_key # API key for OpenAI TTS service
+
+# TTS Configuration
+APP_TTS_DEFAULT_VOICE=alloy        # Default voice for TTS
+APP_TTS_DEFAULT_MODEL=tts-1        # Default TTS model
+APP_TTS_CHUNK_SIZE=4000            # Maximum characters per TTS chunk
+APP_TTS_TEMP_DIR=/tmp/tts          # Directory for temporary audio files
+
+# HTTP Client Configuration
+APP_HTTP_MAX_RETRIES=3             # Maximum number of retry attempts for HTTP requests
+APP_HTTP_RETRY_DELAY=1.0           # Delay between retry attempts (seconds)
+APP_HTTP_TIMEOUT=30.0              # HTTP request timeout (seconds)
+
+# Content Extraction Configuration
+APP_JINA_BASE_URL=https://r.jina.ai/ # Base URL for Jina.ai API
 ```
+
+#### Configuration Precedence
+
+The application loads configuration in the following order (later sources override earlier ones):
+
+1. Default values in the `Settings` class
+2. Environment variables
+3. `.env` file
+4. Command line arguments (when applicable)
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please follow these guidelines to contribute to the project:
+
+### Code of Conduct
+
+- Be respectful and inclusive in your communications
+- Provide constructive feedback
+- Focus on the issue, not the person
+
+### Contribution Process
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes
+4. Run tests to ensure they pass (`pytest`)
+5. Update documentation if needed
+6. Commit your changes (`git commit -m 'Add some amazing feature'`)
+   - Use clear, descriptive commit messages
+   - Reference issue numbers when applicable
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+### Pull Request Guidelines
+
+- Provide a clear description of the changes
+- Link to any related issues
+- Include screenshots or examples if UI changes are made
+- Ensure all tests pass
+- Make sure code follows the project's style guidelines
+- Keep pull requests focused on a single concern
+
+### Development Environment Setup
+
+1. Clone your fork of the repository
+2. Set up the development environment:
+   ```bash
+   ./setup_venv.sh
+   ```
+3. Activate the virtual environment:
+   ```bash
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+4. Set up pre-commit hooks:
+   ```bash
+   pre-commit install
+   ```
+
+### Code Style
+
+- Follow PEP 8 guidelines
+- Use Black for code formatting
+- Use isort for import sorting
+- Use meaningful variable and function names
+- Write docstrings for all functions, classes, and modules
 
 ## License
 
