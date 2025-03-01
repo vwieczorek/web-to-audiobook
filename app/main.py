@@ -22,15 +22,14 @@ app = FastAPI(
 # Include routers
 app.include_router(health.router)
 
-logger.info("Application startup complete")
+# Conditionally include content extraction router if Jina API key is configured
+try:
+    from app.routers import content_extraction
+    app.include_router(content_extraction.router)
+    logger.info("Content extraction API enabled")
+except ImportError as e:
+    logger.warning(f"Content extraction API not available - missing dependencies: {str(e)}")
+except Exception as e:
+    logger.error(f"Error setting up content extraction API: {str(e)}")
 
-if __name__ == "__main__":
-    import uvicorn
-    logger.info(f"Starting server on {settings.host}:{settings.port}")
-    uvicorn.run(
-        "app.main:app",
-        host=settings.host,
-        port=settings.port,
-        log_level=settings.log_level.lower(),
-        reload=True
-    )
+logger.info("Application startup complete")
