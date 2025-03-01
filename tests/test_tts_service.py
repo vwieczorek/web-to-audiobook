@@ -123,17 +123,19 @@ class TestTTSService:
         ]
         
         # Test concatenation
-        result = await service.concatenate_audio(chunks, TTSFormat.MP3)
+        audio_data, error_message = await service.concatenate_audio(chunks, TTSFormat.MP3)
         
         # Verify result
-        assert result == b"audio1audio2audio3"
+        assert audio_data == b"audio1audio2audio3"
+        assert error_message is None
         
         # Test with a failed chunk
         chunks.append(TTSChunk(id=4, text="Failed chunk", processed=False, error="Error"))
-        result = await service.concatenate_audio(chunks, TTSFormat.MP3)
+        audio_data, error_message = await service.concatenate_audio(chunks, TTSFormat.MP3)
         
         # Verify result (should skip failed chunks)
-        assert result == b"audio1audio2audio3"
+        assert audio_data == b"audio1audio2audio3"
+        assert error_message is None
 
 
 @pytest.mark.asyncio
