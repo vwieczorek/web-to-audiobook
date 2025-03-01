@@ -112,15 +112,6 @@ class TestOpenAITTSService:
         """Create a mock HTTP client."""
         client = MagicMock(spec=HttpClient)
         client.request = AsyncMock()
-        
-        # Create a mock response
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.content = b"audio_data"
-        mock_response.read = AsyncMock(return_value=b"audio_data")
-        mock_response.json = AsyncMock(return_value={})
-        
-        client.request.return_value = mock_response
         return client
     
     @pytest.fixture
@@ -133,10 +124,10 @@ class TestOpenAITTSService:
     
     async def test_process_chunk_success(self, service, mock_http_client):
         """Test processing a chunk successfully."""
-        # Mock response
+        # Mock response with status_code attribute
         mock_response = MagicMock()
-        mock_response.status = 200
-        mock_response.read = AsyncMock(return_value=b"audio_data")
+        mock_response.status_code = 200
+        mock_response.content = b"audio_data"
         mock_http_client.request.return_value = mock_response
         
         # Create chunk and config
@@ -175,12 +166,12 @@ class TestOpenAITTSService:
     
     async def test_process_chunk_error(self, service, mock_http_client):
         """Test processing a chunk with an error."""
-        # Mock error response
+        # Mock error response with status_code attribute
         mock_response = MagicMock()
-        mock_response.status = 400
-        mock_response.json = AsyncMock(return_value={
+        mock_response.status_code = 400
+        mock_response.json.return_value = {
             "error": {"message": "Invalid request"}
-        })
+        }
         mock_http_client.request.return_value = mock_response
         
         # Create chunk and config
@@ -202,10 +193,10 @@ class TestOpenAITTSService:
     
     async def test_convert_text_to_speech(self, service, mock_http_client):
         """Test converting text to speech."""
-        # Mock successful response for chunks
+        # Mock successful response for chunks with status_code attribute
         mock_response = MagicMock()
-        mock_response.status = 200
-        mock_response.read = AsyncMock(return_value=b"audio_data")
+        mock_response.status_code = 200
+        mock_response.content = b"audio_data"
         mock_http_client.request.return_value = mock_response
         
         # Create request
