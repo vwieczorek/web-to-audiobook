@@ -81,12 +81,16 @@ This application converts web articles to audiobooks by extracting content using
    ```bash
    python -m app.main
    ```
+   
+   Note: When running directly with Python, the application uses port 8000 by default.
 
-7. The API will be available at `http://localhost:8142`
+7. The API will be available at `http://localhost:8000`
 
 ## API Documentation
 
-Once the application is running, you can access the Swagger UI at `http://localhost:8142/docs` to explore and test the API endpoints.
+Once the application is running, you can access the Swagger UI at:
+- `http://localhost:8142/docs` when running with Docker
+- `http://localhost:8000/docs` when running directly with Python
 
 ### Main Endpoints
 
