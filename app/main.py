@@ -36,3 +36,9 @@ else:
     logger.info("Content extraction API disabled - no Jina API key configured")
 
 logger.info("Application startup complete")
+
+# Run the app with Uvicorn when this module is executed directly
+if __name__ == "__main__":
+    import uvicorn
+    logger.info("Starting development server...")
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
