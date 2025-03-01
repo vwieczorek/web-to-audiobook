@@ -224,4 +224,72 @@ class JinaContentExtractor(ContentExtractor):
         if current_paragraph:
             current_section.paragraphs.append(" ".join(current_paragraph))
         
-        return sections
+        return sectionsimport logging
+from typing import Union, Dict, Any
+
+import httpx
+from pydantic import ValidationError
+
+from app.models.content import ExtractedContent, ExtractionError
+
+
+logger = logging.getLogger(__name__)
+
+
+class JinaContentExtractor:
+    """
+    Content extraction service using Jina.ai API.
+    """
+    
+    def __init__(self, api_key: str):
+        """Initialize with Jina API key."""
+        self.api_key = api_key
+        self.base_url = "https://api.jina.ai/v1"
+        self.headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+    
+    async def extract_content(self, url: str) -> Union[ExtractedContent, ExtractionError]:
+        """
+        Extract content from a URL using Jina.ai API.
+        
+        Args:
+            url: The URL to extract content from
+            
+        Returns:
+            ExtractedContent or ExtractionError
+        """
+        logger.info(f"Extracting content from URL: {url}")
+        
+        # This is a placeholder implementation
+        # In a real implementation, we would call the Jina API
+        try:
+            # Simulate a successful extraction
+            # In a real implementation, replace with actual API call
+            extracted_data = {
+                "title": "Sample Article Title",
+                "content": "This is a placeholder for the extracted content. In a real implementation, this would be the actual content extracted from the URL.",
+                "url": url,
+                "author": "Sample Author",
+                "published_date": "2023-01-01",
+                "summary": "This is a sample summary of the article.",
+                "word_count": 150,
+                "estimated_reading_time": 1,
+                "tags": ["sample", "placeholder"],
+                "metadata": {"source": "placeholder"}
+            }
+            
+            return ExtractedContent(**extracted_data)
+            
+        except ValidationError as e:
+            logger.error(f"Validation error: {str(e)}")
+            return ExtractionError(
+                error_message="Failed to validate extracted content",
+                details={"validation_errors": str(e)}
+            )
+        except Exception as e:
+            logger.error(f"Error extracting content: {str(e)}")
+            return ExtractionError(
+                error_message=f"Failed to extract content: {str(e)}"
+            )

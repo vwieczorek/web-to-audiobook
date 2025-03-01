@@ -56,4 +56,28 @@ class ExtractionError(BaseModel):
     error_message: str = Field(..., description="Error message")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Time of error")
     status_code: Optional[int] = Field(None, description="HTTP status code if applicable")
-    retry_count: int = Field(0, description="Number of retry attempts made")
+    retry_count: int = Field(0, description="Number of retry attempts made")from typing import Optional, Dict, Any, List
+from pydantic import BaseModel, Field
+
+
+class ExtractionError(BaseModel):
+    """Model for content extraction errors."""
+    error_message: str
+    status_code: Optional[int] = None
+    details: Optional[Dict[str, Any]] = None
+
+
+class ExtractedContent(BaseModel):
+    """Model for extracted content from a URL."""
+    title: str
+    content: str
+    url: str
+    author: Optional[str] = None
+    published_date: Optional[str] = None
+    summary: Optional[str] = None
+    word_count: Optional[int] = None
+    estimated_reading_time: Optional[int] = Field(
+        None, description="Estimated reading time in minutes"
+    )
+    tags: List[str] = Field(default_factory=list)
+    metadata: Dict[str, Any] = Field(default_factory=dict)

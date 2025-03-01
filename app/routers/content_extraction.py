@@ -53,17 +53,7 @@ async def extract_from_url(
             detail=f"Failed to extract content: {result.error_message}"
         )
     
-    return resultimport logging
-from fastapi import APIRouter, HTTPException, Depends
-
-from app.config import Settings
-
-router = APIRouter(
-    prefix="/extract",
-    tags=["content-extraction"],
-)
-
-logger = logging.getLogger(__name__)
+    return result
 
 
 @router.get("/")
