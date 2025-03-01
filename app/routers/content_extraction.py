@@ -53,4 +53,24 @@ async def extract_from_url(
             detail=f"Failed to extract content: {result.error_message}"
         )
     
-    return result
+    return resultimport logging
+from fastapi import APIRouter, HTTPException, Depends
+
+from app.config import Settings
+
+router = APIRouter(
+    prefix="/extract",
+    tags=["content-extraction"],
+)
+
+logger = logging.getLogger(__name__)
+
+
+@router.get("/")
+async def extract_content_placeholder():
+    """
+    Placeholder endpoint for content extraction.
+    This will be implemented with Jina.ai integration.
+    """
+    logger.info("Content extraction endpoint called")
+    return {"message": "Content extraction placeholder - will be implemented with Jina.ai"}

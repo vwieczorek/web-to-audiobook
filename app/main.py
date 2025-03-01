@@ -23,13 +23,16 @@ app = FastAPI(
 app.include_router(health.router)
 
 # Conditionally include content extraction router if Jina API key is configured
-try:
-    from app.routers import content_extraction
-    app.include_router(content_extraction.router)
-    logger.info("Content extraction API enabled")
-except ImportError as e:
-    logger.warning(f"Content extraction API not available - missing dependencies: {str(e)}")
-except Exception as e:
-    logger.error(f"Error setting up content extraction API: {str(e)}")
+if settings.jina_api_key:
+    try:
+        from app.routers import content_extraction
+        app.include_router(content_extraction.router)
+        logger.info("Content extraction API enabled")
+    except ImportError as e:
+        logger.warning(f"Content extraction API not available - missing dependencies: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error setting up content extraction API: {str(e)}")
+else:
+    logger.info("Content extraction API disabled - no Jina API key configured")
 
 logger.info("Application startup complete")
