@@ -6,7 +6,7 @@ import asyncio
 
 from app.models.tts import (
     TTSRequest, TTSResponse, TTSError, TTSChunk, 
-    TTSConfig, TTSProvider, TTSModel, TTSVoice
+    TTSConfig, TTSProvider, TTSModel, TTSVoice, TTSFormat
 )
 from app.services.tts.base import TTSService
 
