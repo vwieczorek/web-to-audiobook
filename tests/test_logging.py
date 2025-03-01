@@ -37,12 +37,20 @@ def test_setup_logging_json_format(temp_log_file):
     logger.info(test_message)
     
     with open(temp_log_file, 'r') as f:
-        log_line = f.readline()
-        log_data = json.loads(log_line)
+        log_lines = f.readlines()
         
-        assert log_data["message"] == test_message
-        assert log_data["level"] == "INFO"
-        assert "timestamp" in log_data
+        # Find the line with our test message
+        test_log_data = None
+        for line in log_lines:
+            data = json.loads(line)
+            if data.get("name") == "test_logger":
+                test_log_data = data
+                break
+        
+        assert test_log_data is not None, "Test logger message not found in log file"
+        assert test_log_data["message"] == test_message
+        assert test_log_data["level"] == "INFO"
+        assert "timestamp" in test_log_data
 
 
 def test_setup_logging_log_level(temp_log_file):
@@ -61,7 +69,20 @@ def test_setup_logging_log_level(temp_log_file):
     with open(temp_log_file, 'r') as f:
         log_lines = f.readlines()
         
-        assert len(log_lines) == 1
-        log_data = json.loads(log_lines[0])
-        assert log_data["message"] == test_message
-        assert log_data["level"] == "WARNING"
+        # Should have at least one log entry (there might be an initialization message)
+        assert len(log_lines) >= 1
+        
+        # Find the warning message from our test logger
+        warning_found = False
+        info_found = False
+        
+        for line in log_lines:
+            data = json.loads(line)
+            if data.get("name") == "test_logger":
+                if data.get("level") == "WARNING" and data.get("message") == test_message:
+                    warning_found = True
+                if data.get("level") == "INFO" and data.get("message") == "This should not be logged":
+                    info_found = True
+        
+        assert warning_found, "Warning message not found in logs"
+        assert not info_found, "Info message should not have been logged"

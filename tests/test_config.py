@@ -1,6 +1,6 @@
 import os
 import pytest
-from pydantic import ValidationError
+from pydantic_core import ValidationError
 
 # Import the Config class from app
 from app.config import Settings
@@ -9,7 +9,7 @@ from app.config import Settings
 def test_settings_default_values():
     """Test that default values are set correctly when environment variables are not provided."""
     # Clear environment variables that might be set
-    for env_var in ["APP_PORT", "APP_HOST", "LOG_LEVEL", "LOG_FILE"]:
+    for env_var in ["APP_PORT", "APP_HOST", "APP_LOG_LEVEL", "APP_LOG_FILE"]:
         if env_var in os.environ:
             del os.environ[env_var]
 
@@ -22,11 +22,12 @@ def test_settings_default_values():
 
 def test_settings_from_environment():
     """Test that settings are loaded from environment variables when provided."""
+    # Set environment variables with APP_ prefix
     os.environ["APP_PORT"] = "9000"
     os.environ["APP_HOST"] = "127.0.0.1"
-    os.environ["LOG_LEVEL"] = "DEBUG"
-    os.environ["LOG_FILE"] = "custom_logs/app.log"
-
+    os.environ["APP_LOG_LEVEL"] = "DEBUG"
+    os.environ["APP_LOG_FILE"] = "custom_logs/app.log"
+    
     settings = Settings()
     assert settings.port == 9000
     assert settings.host == "127.0.0.1"
@@ -34,7 +35,7 @@ def test_settings_from_environment():
     assert settings.log_file == "custom_logs/app.log"
 
     # Clean up
-    for env_var in ["APP_PORT", "APP_HOST", "LOG_LEVEL", "LOG_FILE"]:
+    for env_var in ["APP_PORT", "APP_HOST", "APP_LOG_LEVEL", "APP_LOG_FILE"]:
         if env_var in os.environ:
             del os.environ[env_var]
 

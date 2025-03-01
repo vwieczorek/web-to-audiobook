@@ -14,6 +14,7 @@ This application converts web articles to audiobooks by extracting text using Ji
 
 - Python 3.10+
 - Docker and Docker Compose (for containerized deployment)
+- Pydantic v2.3.0 and pydantic-settings v2.0.3
 
 ## Installation
 
