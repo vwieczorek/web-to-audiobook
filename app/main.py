@@ -33,9 +33,3 @@ except Exception as e:
     logger.error(f"Error setting up content extraction API: {str(e)}")
 
 logger.info("Application startup complete")
-
-# Run the app with uvicorn when the script is executed directly
-if __name__ == "__main__":
-    import uvicorn
-    logger.info("Starting uvicorn server")
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
