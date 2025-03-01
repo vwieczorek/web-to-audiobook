@@ -56,7 +56,12 @@ class ExtractionError(BaseModel):
     error_message: str = Field(..., description="Error message")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Time of error")
     status_code: Optional[int] = Field(None, description="HTTP status code if applicable")
-    retry_count: int = Field(0, description="Number of retry attempts made")from typing import Optional, Dict, Any, List
+    retry_count: int = Field(0, description="Number of retry attempts made")
+
+
+# The following is the simplified model used by the placeholder implementation
+# This can be removed once the full implementation is ready
+from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
 
 

@@ -6,7 +6,7 @@ from pydantic import HttpUrl
 
 from app.config import Settings
 from app.models.content import ExtractedContent, ExtractionError
-from app.services.content_extraction.jina_extractor import JinaContentExtractor
+from app.services.content_extraction.jina_extractor import JinaContentExtractor, JinaContentExtractorPlaceholder
 
 
 router = APIRouter(prefix="/extract", tags=["content-extraction"])
@@ -30,7 +30,9 @@ async def get_jina_extractor(settings: Settings = Depends(get_settings)):
             detail="Content extraction service not properly configured. Missing API key."
         )
     
-    return JinaContentExtractor(api_key=settings.jina_api_key.get_secret_value())
+    # Use the placeholder implementation for now
+    # TODO: Switch to the full implementation when ready
+    return JinaContentExtractorPlaceholder(api_key=settings.jina_api_key.get_secret_value())
 
 
 @router.post("/url", response_model=ExtractedContent)

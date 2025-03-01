@@ -49,4 +49,29 @@ class ContentExtractor(ABC):
         Returns:
             List of ContentSection objects
         """
+        passimport logging
+from abc import ABC, abstractmethod
+from typing import Union
+
+from app.models.content import ExtractedContent, ExtractionError
+
+
+class ContentExtractor(ABC):
+    """Base class for content extractors."""
+    
+    def __init__(self):
+        """Initialize the content extractor."""
+        self.logger = logging.getLogger(self.__class__.__name__)
+    
+    @abstractmethod
+    async def extract_content(self, url: str) -> Union[ExtractedContent, ExtractionError]:
+        """
+        Extract content from a URL.
+        
+        Args:
+            url: The URL to extract content from
+            
+        Returns:
+            ExtractedContent if successful, ExtractionError if failed
+        """
         pass

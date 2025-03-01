@@ -224,7 +224,12 @@ class JinaContentExtractor(ContentExtractor):
         if current_paragraph:
             current_section.paragraphs.append(" ".join(current_paragraph))
         
-        return sectionsimport logging
+        return sections
+
+
+# The following is the placeholder implementation
+# This can be removed once the full implementation is ready
+import logging
 from typing import Union, Dict, Any
 
 import httpx
@@ -236,9 +241,9 @@ from app.models.content import ExtractedContent, ExtractionError
 logger = logging.getLogger(__name__)
 
 
-class JinaContentExtractor:
+class JinaContentExtractorPlaceholder:
     """
-    Content extraction service using Jina.ai API.
+    Content extraction service using Jina.ai API (placeholder implementation).
     """
     
     def __init__(self, api_key: str):
