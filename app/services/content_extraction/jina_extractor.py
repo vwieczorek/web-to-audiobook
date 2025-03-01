@@ -8,7 +8,9 @@ from app.models.content import (
     ExtractedContent,
     ExtractionError,
     ContentMetadata,
-    ContentSection
+    ContentSection,
+    PlaceholderExtractedContent,
+    PlaceholderExtractionError
 )
 from app.services.content_extraction.base import ContentExtractor
 from app.services.http_client import HttpClient
@@ -31,7 +33,7 @@ class JinaContentExtractor(ContentExtractor):
         self.base_url = base_url
         self.http_client = http_client or HttpClient(max_retries=3, logger=self.logger)
     
-    async def extract_content(self, url: str) -> Union[PlaceholderExtractedContent, PlaceholderExtractionError]:
+    async def extract_content(self, url: str) -> Union[ExtractedContent, ExtractionError]:
         """
         Extract content from a URL using Jina.ai.
         
@@ -235,7 +237,7 @@ from typing import Union, Dict, Any
 import httpx
 from pydantic import ValidationError
 
-from app.models.content import PlaceholderExtractedContent, PlaceholderExtractionError
+from app.models.content import PlaceholderExtractedContent, PlaceholderExtractionError, ExtractedContent, ExtractionError
 
 
 logger = logging.getLogger(__name__)
