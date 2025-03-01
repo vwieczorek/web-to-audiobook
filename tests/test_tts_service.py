@@ -2,7 +2,6 @@ import pytest
 import os
 import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
-import aiohttp
 from io import BytesIO
 
 from app.models.tts import (
