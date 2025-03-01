@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from pydantic import HttpUrl
 
 from app.config import Settings
-from app.models.content import ExtractedContent, ExtractionError
+from app.models.content import ExtractedContent, ExtractionError, PlaceholderExtractedContent
 from app.services.content_extraction.jina_extractor import JinaContentExtractor, JinaContentExtractorPlaceholder
 
 
@@ -35,7 +35,7 @@ async def get_jina_extractor(settings: Settings = Depends(get_settings)):
     return JinaContentExtractorPlaceholder(api_key=settings.jina_api_key.get_secret_value())
 
 
-@router.post("/url", response_model=ExtractedContent)
+@router.post("/url", response_model=PlaceholderExtractedContent)
 async def extract_from_url(
     url: HttpUrl = Body(..., embed=True),
     extractor: JinaContentExtractor = Depends(get_jina_extractor)

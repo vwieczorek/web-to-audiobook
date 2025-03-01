@@ -31,7 +31,7 @@ class JinaContentExtractor(ContentExtractor):
         self.base_url = base_url
         self.http_client = http_client or HttpClient(max_retries=3, logger=self.logger)
     
-    async def extract_content(self, url: str) -> Union[ExtractedContent, ExtractionError]:
+    async def extract_content(self, url: str) -> Union[PlaceholderExtractedContent, PlaceholderExtractionError]:
         """
         Extract content from a URL using Jina.ai.
         
@@ -235,7 +235,7 @@ from typing import Union, Dict, Any
 import httpx
 from pydantic import ValidationError
 
-from app.models.content import ExtractedContent, ExtractionError
+from app.models.content import PlaceholderExtractedContent, PlaceholderExtractionError
 
 
 logger = logging.getLogger(__name__)
@@ -285,16 +285,16 @@ class JinaContentExtractorPlaceholder:
                 "metadata": {"source": "placeholder"}
             }
             
-            return ExtractedContent(**extracted_data)
+            return PlaceholderExtractedContent(**extracted_data)
             
         except ValidationError as e:
             logger.error(f"Validation error: {str(e)}")
-            return ExtractionError(
+            return PlaceholderExtractionError(
                 error_message="Failed to validate extracted content",
                 details={"validation_errors": str(e)}
             )
         except Exception as e:
             logger.error(f"Error extracting content: {str(e)}")
-            return ExtractionError(
+            return PlaceholderExtractionError(
                 error_message=f"Failed to extract content: {str(e)}"
             )

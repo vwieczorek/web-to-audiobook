@@ -61,19 +61,8 @@ class ExtractionError(BaseModel):
 
 # The following is the simplified model used by the placeholder implementation
 # This can be removed once the full implementation is ready
-from typing import Optional, Dict, Any, List
-from pydantic import BaseModel, Field
-
-
-class ExtractionError(BaseModel):
-    """Model for content extraction errors."""
-    error_message: str
-    status_code: Optional[int] = None
-    details: Optional[Dict[str, Any]] = None
-
-
-class ExtractedContent(BaseModel):
-    """Model for extracted content from a URL."""
+class PlaceholderExtractedContent(BaseModel):
+    """Model for extracted content from a URL (placeholder implementation)."""
     title: str
     content: str
     url: str
@@ -86,3 +75,10 @@ class ExtractedContent(BaseModel):
     )
     tags: List[str] = Field(default_factory=list)
     metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class PlaceholderExtractionError(BaseModel):
+    """Model for content extraction errors (placeholder implementation)."""
+    error_message: str
+    status_code: Optional[int] = None
+    details: Optional[Dict[str, Any]] = None
