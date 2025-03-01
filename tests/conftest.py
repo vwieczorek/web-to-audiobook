@@ -7,8 +7,13 @@ import pytest
 from unittest.mock import MagicMock
 
 
-# Configure pytest-asyncio
-pytest_plugins = ["pytest_asyncio"]
+# Try to configure pytest-asyncio if available
+try:
+    import pytest_asyncio
+    pytest_plugins = ["pytest_asyncio"]
+except ImportError:
+    # pytest-asyncio not installed, we'll handle async tests differently
+    pass
 
 
 @pytest.fixture(autouse=True)
