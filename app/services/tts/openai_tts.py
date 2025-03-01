@@ -149,17 +149,38 @@ class OpenAITTSService(TTSService):
             )
             
             # Process response
-            if response.status == 200:
-                # Read binary audio data
-                audio_data = await response.read()
-                chunk.audio_data = audio_data
-                chunk.processed = True
-            else:
-                # Handle error
-                error_data = await response.json()
-                error_msg = error_data.get("error", {}).get("message", f"API error: {response.status}")
-                chunk.error = error_msg
-                self.logger.error(f"Chunk {chunk.id} failed: {error_msg}")
+            if hasattr(response, 'status_code'):
+                if response.status_code == 200:
+                    # Read binary audio data
+                    chunk.audio_data = response.content
+                    chunk.processed = True
+                else:
+                    # Handle error
+                    try:
+                        error_data = response.json()
+                        error_msg = error_data.get("error", {}).get("message", f"API error: {response.status_code}")
+                    except Exception:
+                        error_msg = f"API error: {response.status_code}"
+                    chunk.error = error_msg
+                    self.logger.error(f"Chunk {chunk.id} failed: {error_msg}")
+            elif hasattr(response, 'status'):
+                if response.status == 200:
+                    # Read binary audio data
+                    audio_data = await response.read()
+                    chunk.audio_data = audio_data
+                    chunk.processed = True
+                else:
+                    # Handle error
+                    try:
+                        error_data = await response.json()
+                        error_msg = error_data.get("error", {}).get("message", f"API error: {response.status}")
+                    except Exception:
+                        error_msg = f"API error: {response.status}"
+                    chunk.error = error_msg
+                    self.logger.error(f"Chunk {chunk.id} failed: {error_msg}")
+            elif isinstance(response, Exception):
+                chunk.error = str(response)
+                self.logger.error(f"Chunk {chunk.id} failed: {str(response)}")
             
             return chunk
             

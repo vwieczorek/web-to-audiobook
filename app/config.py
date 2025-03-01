@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     
     # API Keys
     jina_api_key: Optional[SecretStr] = Field(None, description="Jina.ai API key for content extraction")
+    openai_api_key: Optional[SecretStr] = Field(None, description="OpenAI API key for TTS")
     
     # Validation
     @field_validator("port")

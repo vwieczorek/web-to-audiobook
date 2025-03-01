@@ -22,6 +22,16 @@ app = FastAPI(
 # Include routers
 app.include_router(health.router)
 
+# Include TTS router
+try:
+    from app.routers import tts
+    app.include_router(tts.router)
+    logger.info("TTS API enabled")
+except ImportError as e:
+    logger.warning(f"TTS API not available - missing dependencies: {str(e)}")
+except Exception as e:
+    logger.error(f"Error setting up TTS API: {str(e)}")
+
 # Conditionally include content extraction router if Jina API key is configured
 if settings.jina_api_key:
     try:

@@ -97,3 +97,4 @@ class TTSError(BaseModel):
     message: str = Field(..., description="Error message")
     details: Optional[str] = Field(default=None, description="Detailed error information")
     chunk_id: Optional[int] = Field(default=None, description="ID of the chunk that failed")
+    status_code: Optional[int] = Field(default=None, description="HTTP status code if applicable")

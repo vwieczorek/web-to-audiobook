@@ -4,6 +4,11 @@ import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
 from io import BytesIO
 
+# Import the modules we're testing
+from app.services.tts.base import TTSService
+from app.services.tts.openai_tts import OpenAITTSService
+from app.services.tts.local_tts import LocalTTSService
+
 from app.models.tts import (
     TTSRequest, TTSResponse, TTSError, TTSChunk, 
     TTSConfig, TTSProvider, TTSModel, TTSVoice, TTSFormat
@@ -107,6 +112,15 @@ class TestOpenAITTSService:
         """Create a mock HTTP client."""
         client = MagicMock(spec=HttpClient)
         client.request = AsyncMock()
+        
+        # Create a mock response
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.content = b"audio_data"
+        mock_response.read = AsyncMock(return_value=b"audio_data")
+        mock_response.json = AsyncMock(return_value={})
+        
+        client.request.return_value = mock_response
         return client
     
     @pytest.fixture
@@ -246,9 +260,10 @@ class TestLocalTTSService:
     @pytest.fixture
     def service(self):
         """Create a LocalTTSService instance."""
-        return LocalTTSService()
+        return LocalTTSService(logger=MagicMock())
     
-    async def test_process_chunk(self, service):
+    @patch("asyncio.sleep")
+    async def test_process_chunk(self, mock_sleep, service):
         """Test processing a chunk with local TTS."""
         # Create chunk and config
         chunk = TTSChunk(id=1, text="Test text")
@@ -266,8 +281,12 @@ class TestLocalTTSService:
         assert result.processed is True
         assert result.audio_data is not None
         assert result.error is None
+        
+        # Verify that sleep was called
+        mock_sleep.assert_called_once()
     
-    async def test_convert_text_to_speech(self, service):
+    @patch("asyncio.sleep")
+    async def test_convert_text_to_speech(self, mock_sleep, service):
         """Test converting text to speech with local TTS."""
         # Create request
         request = TTSRequest(
@@ -292,6 +311,9 @@ class TestLocalTTSService:
         assert result.progress.total_chunks == 1
         assert result.progress.processed_chunks == 1
         assert result.progress.failed_chunks == 0
+        
+        # Verify that sleep was called
+        mock_sleep.assert_called()
     
     async def test_convert_text_to_speech_invalid_provider(self, service):
         """Test converting text with invalid provider."""
