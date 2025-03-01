@@ -101,6 +101,39 @@ class TestTTSService:
         assert progress.processed_chunks == 2
         assert progress.failed_chunks == 1
         assert progress.progress_percentage == 40.0
+    
+    @pytest.mark.asyncio
+    async def test_concatenate_audio(self):
+        """Test concatenating audio chunks."""
+        # Create a concrete subclass for testing
+        class TestTTS(TTSService):
+            async def convert_text_to_speech(self, request):
+                pass
+            
+            async def process_chunk(self, chunk, config):
+                pass
+        
+        service = TestTTS()
+        
+        # Create test chunks with audio data
+        chunks = [
+            TTSChunk(id=1, text="Chunk 1", processed=True, audio_data=b"audio1"),
+            TTSChunk(id=2, text="Chunk 2", processed=True, audio_data=b"audio2"),
+            TTSChunk(id=3, text="Chunk 3", processed=True, audio_data=b"audio3")
+        ]
+        
+        # Test concatenation
+        result = await service.concatenate_audio(chunks, TTSFormat.MP3)
+        
+        # Verify result
+        assert result == b"audio1audio2audio3"
+        
+        # Test with a failed chunk
+        chunks.append(TTSChunk(id=4, text="Failed chunk", processed=False, error="Error"))
+        result = await service.concatenate_audio(chunks, TTSFormat.MP3)
+        
+        # Verify result (should skip failed chunks)
+        assert result == b"audio1audio2audio3"
 
 
 @pytest.mark.asyncio
